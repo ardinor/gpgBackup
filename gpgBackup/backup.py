@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 
 from gpgBackup.models import BackupDetail
+from gpgBackup.settings import DEBUG
 
 class Backup():
 
@@ -16,6 +17,16 @@ class Backup():
         self.session = self.get_session(Base, self.engine)
 
         self.logger = logging.getLogger('gpgBackup')
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')
+        stream_handler = logging.StreamHandler(stream=sys.stdout)
+        stream_handler.setFormatter(formatter)
+        if DEBUG:
+            stream_handler.setLevel(logging.DEBUG)
+            self.logger.setLevel(logging.DEBUG)
+        else:
+            stream_handler.setLevel(logging.INFO)
+            self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(stream_handler)
 
 
     def get_engine(self):
