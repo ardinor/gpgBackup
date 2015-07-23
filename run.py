@@ -1,1 +1,2 @@
-from gpgBackup import
+from gpgBackup import Backup
+

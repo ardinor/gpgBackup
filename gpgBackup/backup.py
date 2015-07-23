@@ -1,11 +1,13 @@
-
+import os
 import logging
 
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 
 from gpgBackup.models import BackupDetail
-from gpgBackup.settings import DEBUG
+from gpgBackup.settings import DEBUG, DATABASE_URI, APP_DIR, GPG_KEY, \
+    BACKUP_DETAILS, DB_FILE, OUT_DIR
+
 
 class Backup():
 
@@ -27,6 +29,9 @@ class Backup():
             stream_handler.setLevel(logging.INFO)
             self.logger.setLevel(logging.INFO)
         self.logger.addHandler(stream_handler)
+
+        if os.path.exists(DB_FILE) is False:
+            self.create_db()
 
 
     def get_engine(self):
@@ -51,3 +56,14 @@ class Backup():
     def delete_db(self):
 
         self.base.metadata.drop_all(self.engine)
+
+
+    def run_backup(self):
+
+        for backup_source in BACKUP_DETAILS:
+
+            if os.path.isdir(backup_source):
+                pass
+
+            elif os.path.isfile(backup_source):
+                pass
